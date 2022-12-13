@@ -14,6 +14,9 @@ const Cart = ({ onClose }) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
+  const cartItemClean = () => {
+    cartCtx.cleanCart();
+  };
   const cartItems = (
     <ul className={classes["cart-items"]}>
       {cartCtx.items.map((item) => (
@@ -37,6 +40,11 @@ const Cart = ({ onClose }) => {
         <span>{totalAmount}</span>
       </div>
       <div className={classes.actions}>
+        {hasItems && (
+          <button onClick={cartItemClean} className={classes["button--clear"]}>
+            Clear Cart
+          </button>
+        )}
         <button className={classes["button--alt"]} onClick={onClose}>
           Close
         </button>
