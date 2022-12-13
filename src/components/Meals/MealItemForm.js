@@ -1,18 +1,21 @@
-import Input from '../UI/Input';
-import classes from './MealItemForm.module.css';
+import Input from "../UI/Input";
+import classes from "./MealItemForm.module.css";
 
 const MealItemForm = (props) => {
+  const submintHandler = (event) => {
+    event.preventDefault();
+  };
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={submintHandler}>
       <Input
-        label='Amount'
+        label="Amount"
         input={{
-          id: 'amount' + props.id,
-          type: 'number',
-          min: '1',
-          max: '5',
-          step: '1',
-          defaultValue: '1',
+          id: "amount" + props.id,
+          type: "number",
+          min: "1",
+          max: "5",
+          step: "1",
+          defaultValue: "1",
         }}
       />
       <button>+ Add</button>
