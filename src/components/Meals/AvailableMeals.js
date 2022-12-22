@@ -5,6 +5,7 @@ import MealItem from './MealItem';
 
 const AvailableMeals = () => {
   const [mealsArray, setMealsArray] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchMeals = async () => {
@@ -19,6 +20,7 @@ const AvailableMeals = () => {
           price: responseData[key].price,
         });
       }
+      setIsLoading(false);
       setMealsArray(loadedMeals);
     };
     fetchMeals();
@@ -35,6 +37,7 @@ const AvailableMeals = () => {
   return (
     <section className={classes.meals}>
       <Card>
+        {isLoading && <p>Loading...</p>}
         <ul>{mealsList}</ul>
       </Card>
     </section>
