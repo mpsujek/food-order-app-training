@@ -1,10 +1,17 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import classes from './Checkout.module.css';
 
 const isEmpty = (value) => value.trim() === '';
 const isFiveChars = (value) => value.trim().length === 5;
 
 const Checkout = (props) => {
+  const [formStateValidity, setFormStateValidity] = useState({
+    name: true,
+    street: true,
+    postal: true,
+    city: true,
+  });
+
   const nameInputRef = useRef();
   const streetInputRef = useRef();
   const postalInputRef = useRef();
@@ -21,13 +28,20 @@ const Checkout = (props) => {
     const enteredPostalIsValid = isFiveChars(enteredPostal);
     const enteredCityIsValid = !isEmpty(enteredCity);
 
+    setFormStateValidity({
+      name: enteredNameIsValid,
+      street: enteredStreetIsValid,
+      postal: enteredPostalIsValid,
+      city: enteredCityIsValid,
+    });
+
     const formIsValid =
       enteredNameIsValid &&
       enteredStreetIsValid &&
       enteredPostalIsValid &&
       enteredCityIsValid;
-    if (formIsValid) {
-      //submit
+    if (!formIsValid) {
+      return;
     }
   };
 
@@ -36,18 +50,22 @@ const Checkout = (props) => {
       <div className={classes.control}>
         <label htmlFor='name'>Your Name</label>
         <input type='text' id='name' ref={nameInputRef} />
+        {formStateValidity.name && <p>Please enter valid name</p>}
       </div>
       <div className={classes.control}>
         <label htmlFor='street'>Street</label>
         <input type='text' id='street' ref={streetInputRef} />
+        {formStateValidity.street && <p>Please enter valid street</p>}
       </div>
       <div className={classes.control}>
         <label htmlFor='postal'>Postal Code</label>
         <input type='text' id='postal' ref={postalInputRef} />
+        {formStateValidity.postal && <p>Please enter valid postal</p>}
       </div>
       <div className={classes.control}>
         <label htmlFor='city'>City</label>
         <input type='text' id='city' ref={cityInputRef} />
+        {formStateValidity.city && <p>Please enter valid city</p>}
       </div>
       <div className={classes.actions}>
         <button type='button' onClick={props.onCancel}>
