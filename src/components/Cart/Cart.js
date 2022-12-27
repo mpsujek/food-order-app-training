@@ -57,6 +57,13 @@ const Cart = ({ onClose }) => {
     </div>
   );
 
+  const submitOrderHanlder = (userData) => {
+    fetch(process.env.REACT_APP_ORDERS_URL, {
+      method: 'POST',
+      body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
+    });
+  };
+
   return (
     <Modal onClose={onClose}>
       {cartItems}
@@ -64,7 +71,9 @@ const Cart = ({ onClose }) => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {showCheckout && <Checkout onCancel={onClose} />}
+      {showCheckout && (
+        <Checkout onCheckout={submitOrderHanlder} onCancel={onClose} />
+      )}
       {!showCheckout && modalActions}
     </Modal>
   );
