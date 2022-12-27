@@ -45,27 +45,40 @@ const Checkout = (props) => {
     }
   };
 
+  const nameClasses = `${classes.control} ${
+    formStateValidity.name ? '' : classes.invalid
+  }`;
+  const streetClasses = `${classes.control} ${
+    formStateValidity.street ? '' : classes.invalid
+  }`;
+  const postalClasses = `${classes.control} ${
+    formStateValidity.postal ? '' : classes.invalid
+  }`;
+  const cityClasses = `${classes.control} ${
+    formStateValidity.city ? '' : classes.invalid
+  }`;
+
   return (
     <form className={classes.form} onSubmit={confirmHandler}>
-      <div className={classes.control}>
+      <div className={nameClasses}>
         <label htmlFor='name'>Your Name</label>
         <input type='text' id='name' ref={nameInputRef} />
-        {formStateValidity.name && <p>Please enter valid name</p>}
+        {!formStateValidity.name && <p>Please enter valid name</p>}
       </div>
-      <div className={classes.control}>
+      <div className={streetClasses}>
         <label htmlFor='street'>Street</label>
         <input type='text' id='street' ref={streetInputRef} />
-        {formStateValidity.street && <p>Please enter valid street</p>}
+        {!formStateValidity.street && <p>Please enter valid street</p>}
       </div>
-      <div className={classes.control}>
+      <div className={postalClasses}>
         <label htmlFor='postal'>Postal Code</label>
         <input type='text' id='postal' ref={postalInputRef} />
-        {formStateValidity.postal && <p>Please enter valid postal</p>}
+        {!formStateValidity.postal && <p>Please enter valid postal</p>}
       </div>
-      <div className={classes.control}>
+      <div className={cityClasses}>
         <label htmlFor='city'>City</label>
         <input type='text' id='city' ref={cityInputRef} />
-        {formStateValidity.city && <p>Please enter valid city</p>}
+        {!formStateValidity.city && <p>Please enter valid city</p>}
       </div>
       <div className={classes.actions}>
         <button type='button' onClick={props.onCancel}>
