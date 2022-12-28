@@ -7,6 +7,8 @@ import Checkout from './Checkout';
 
 const Cart = ({ onClose }) => {
   const [showCheckout, setShowCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   const cartCtx = useContext(CartContext);
   const totalAmount = `$${cartCtx.totalAmount.toFixed(2)}`;
@@ -17,8 +19,8 @@ const Cart = ({ onClose }) => {
   const cartItemAddHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
-  const cartItemClean = () => {
-    cartCtx.cleanCart();
+  const carItemClear = () => {
+    cartCtx.clearCart();
   };
   const cartItems = (
     <ul className={classes['cart-items']}>
@@ -42,7 +44,7 @@ const Cart = ({ onClose }) => {
   const modalActions = (
     <div className={classes.actions}>
       {hasItems && (
-        <button onClick={cartItemClean} className={classes['button--clear']}>
+        <button onClick={carItemClear} className={classes['button--clear']}>
           Clear Cart
         </button>
       )}
@@ -57,24 +59,49 @@ const Cart = ({ onClose }) => {
     </div>
   );
 
-  const submitOrderHanlder = (userData) => {
-    fetch(process.env.REACT_APP_ORDERS_URL, {
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
+    await fetch(process.env.REACT_APP_ORDERS_URL, {
       method: 'POST',
       body: JSON.stringify({ user: userData, orderedItems: cartCtx.items }),
     });
+    setIsSubmitting(false);
+    setDidSubmit(true);
+    cartCtx.clearCart();
   };
 
-  return (
-    <Modal onClose={onClose}>
+  const isSubmittingModalContent = <p>Sending order data...</p>;
+
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
       {showCheckout && (
-        <Checkout onCheckout={submitOrderHanlder} onCancel={onClose} />
+        <Checkout onCheckout={submitOrderHandler} onCancel={onClose} />
       )}
       {!showCheckout && modalActions}
+    </>
+  );
+
+  const didSubmitModalContent = (
+    <>
+      <p>Successfully send the order!</p>
+      <div className={classes.actions}>
+        <button className={classes.button} onClick={onClose}>
+          Close
+        </button>
+      </div>
+    </>
+  );
+
+  return (
+    <Modal onClose={onClose}>
+      {!isSubmitting && !didSubmit && cartModalContent}
+      {isSubmitting && isSubmittingModalContent}
+      {!isSubmitting && didSubmit && didSubmitModalContent}
     </Modal>
   );
 };
